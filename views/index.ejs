@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+  <title>Group Chat</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+
+
+$(document).ready(function(){
+  var socket = io.connect();
+  console.log(socket);
+  var username = prompt('yourname');
+  if(username){
+    socket.emit('clientname', {username: username});
+  }
+  socket.on('pear', function(data){
+    console.log(data);
+    for(var i = 0; i < data.chatHistory.length; i++){
+      $('.chat').append('<p>'+ data.chatHistory[i].username +'---'+data.chatHistory[i].message+'</p>' );
+    }
+  });
+
+  socket.on('bananas', function(data){
+    console.log('are we here? client');
+    $('.chat').append('<p>'+ data.username + 'has entered</p>');
+  });
+  $('button').click(function(){
+    var myMessage = $('.message').val();
+    console.log(myMessage);
+    socket.emit('kiwi',{message: myMessage, username:username});
+  });
+  socket.on('lime', function(data){
+    $('.chat').append('<p>' + data.username + ' said: '+ data.message + '</p>');
+  });
+});
+
+  </script>
+</head>
+<body>
+  test
+  <div class="groupchat">
+  <div class="chat">
+ <input type="text" name="message" class="message">
+ <button>iii</button>
+  </div>
+  </div>
+</body>
+</html>
